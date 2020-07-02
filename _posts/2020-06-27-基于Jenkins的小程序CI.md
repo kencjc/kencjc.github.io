@@ -40,6 +40,65 @@ miniprogram-ci \
 
 ## 流程
 
-### 1、创建Job
-选择流水线类型的Job进行创建
-![](https://i.loli.net/2020/07/02/83hnL25xkBypVde.png)
+### 创建Job
+
+选择流水线类型的Job进行创建，如下图选项  
+
+![流水线类型](https://i.loli.net/2020/07/02/83hnL25xkBypVde.png)
+
+### 配置流水线Job
+
+我这里用的方法是，把Jenkinsfile脚本文件放在仓库的develop分支  
+Jenkins首先会拉取仓库develop分支的代码，去读取Jenkinsfile，如下图所示  
+
+![流水线配置](https://i.loli.net/2020/07/02/woTZmEO5IJbqNlp.png)
+
+
+### 编写流水线脚本
+  
+重头戏来了，这里的脚本类似于工作流，jenkins会根据脚本一步步执行下去。  
+先根据我要实现的功能，整理出来以下几个步骤：  
+
+1. 拉取代码（pipeline获取Jenkinsfile已经拉取代码）
+2. 配置小程序上传版本信息
+3. 小程序打包
+4. 小程序上传
+
+小程序每次上传代码，都有两个参数需要去填写
+- 版本号
+- 版本说明
+
+**先放上基本的jenkinsfile**
+
+```groovy
+// 流水线
+pipeline {
+    // 代理
+    agent any
+    // 环境变量
+    environment {}
+    // 参数
+    parameters {}
+    // 工作任务
+    stages {
+        // 任务
+        stage('构建') {
+          // 步骤
+          steps {
+
+          }
+        }
+    }
+}
+```
+
+流水线中提供了parameters(参数)来支持参数化构建，这就大大增加了我们可自定义的内容  
+
+我在这里定义了下列几个参数
+- 版本号
+- 版本描述
+- 构建模板（这个是公司业务相关）
+- 构建环境（打包不同的环境）
+- Git分支（适用于有特殊的场景，需要在不同的分支上进行打包上传）
+- 是否安装依赖
+
